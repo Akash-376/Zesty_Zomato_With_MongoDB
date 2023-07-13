@@ -1,0 +1,33 @@
+nav {
+    background-color: #007bff;
+    padding: 10px;
+}
+
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+li {
+    display: inline;
+    margin-right: 10px;
+}
+
+
+a {
+    color: #fff;
+    text-decoration: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+nav ul li:nth-child(1) a{
+    color: coral;
+    letter-spacing: 2px;
+    font-size: 20px;
+    font-weight:bold;
+}
+
+a:hover {
+    background-color: #0056b3;
+}

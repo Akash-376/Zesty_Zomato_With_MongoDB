@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>create</title>
+    <link rel="stylesheet" href="nav.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        h2 {
+            margin-top: 30px;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        input[type="checkbox"] {
+            margin-bottom: 10px;
+            padding: 5px;
+            width: 100%;
+        }
+
+        input[type="submit"] {
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <ul>
+            <li><a href="index.html">Zesty Zomato</a></li>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="create.html">Create</a></li>
+            <li><a href="allOrders.html">All orders</a></li>
+        </ul>
+    </nav>
+    
+
+    <h2>Add New Dish</h2>
+    <form id="addDishForm">
+        
+        <label for="dishName">Dish Name:</label>
+        <input type="text" id="dishName" required><br>
+        
+        <label for="image">Image URL:</label>
+        <input type="text" id="image" required><br>
+
+
+        <label for="price">Price:</label>
+        <input type="text" id="price" required><br>
+
+        <!-- <label for="availability">Availability:</label>
+        <input type="checkbox" id="availability" required><br> -->
+
+        <select id="availability">
+            <option value= "true">available</option>
+            <option value="false">not available</option>
+        </select>
+        <br>
+        <br>
+
+        <input type="submit" value="Add Dish">
+    </form>
+    <script>
+        // Handle form submission for adding a new dish
+        document.getElementById('addDishForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            var image = document.getElementById('image').value;
+            var dishName = document.getElementById('dishName').value;
+            var price = document.getElementById('price').value;
+            var availability = document.getElementById('availability').value;
+
+            var data = {
+                image: image,
+                dish_name: dishName,
+                price: price,
+                availability: availability
+            };
+
+            // Make a POST request to add a new dish
+            fetch('http://localhost:5000/dishes', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(dish => {
+                // Display the added dish
+                alert("Dish added successfully")
+                var dishesElement = document.getElementById('dishes');
+                var dishElement = document.createElement('div');
+                dishElement.innerHTML = `
+                    <h3> Dish: ${dish.dish_name}</h3>
+                    <img src="${dish.image}" alt="${dish.dish_name}">
+                    <p>Price: ${dish.price}</p>
+                `;
+                dishesElement.appendChild(dishElement);
+                
+            })
+            .catch(err => console.error(err));
+        });
+    </script>
+</body>
+
+</html>

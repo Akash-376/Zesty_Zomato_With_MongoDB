@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orders</title>
+    <link rel="stylesheet" href="nav.css">
+    <style>
+        #orders {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        #orders>div {
+            width: 300px;
+            margin-right: 20px;
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f8f8f8;
+        }
+
+        img {
+            width: 100%;
+            height: auto;
+            margin-bottom: 10px;
+        }
+
+        p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <ul>
+            <li><a href="index.html">Zesty Zomato</a></li>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="create.html">Create</a></li>
+            <li><a href="allOrders.html">All orders</a></li>
+        </ul>
+    </nav>
+    <h1>Zesty Zomato</h1>
+
+    <h2 id="allOrder">All Orders</h2>
+    <div id="orders"></div>
+
+    <script>
+
+        // Fetch all orders and display them
+        fetch('http://localhost:5000/orders')
+            .then(response => response.json())
+            .then(orders => {
+                // console.log(dishes)
+                var ordersElement = document.getElementById('orders');
+                var showUnavailability = document.getElementById('allOrder'); // show unavailability
+                // console.log(orders.length+" "+orders.order_id)
+                if(orders.length==1 && orders[0]["_id"] == undefined){
+                    
+                    showUnavailability.innerHTML = `<h2 style = "color:red;"> ${orders[0]["message"]} </h2>`;
+                }else
+                orders.forEach(order => {
+                    var orderElement = document.createElement('div');
+                    orderElement.innerHTML = `
+                        <h3>${order.dish_name}</h3>
+                        <img src="${order.image}" alt="${order.dish_name}">
+                        <p>Price: ₹${order.price}</p>
+                        <p>Customer: ${order.customer_name}</p>
+                        <p>status: ${order.order_status}</p>
+                        <button onclick="changeStatus('${order._id}')">update Status</button>
+                        
+                        
+                    `;
+                    ordersElement.appendChild(orderElement);
+                });
+            })
+            .catch(error => console.error(error));
+
+        // change status
+        function changeStatus(order_id){
+            var updatedStatus = prompt("enter new status")
+            // Make a POST request
+            fetch (`http://localhost:5000/orders/${order_id}?order_status=${updatedStatus}`, {
+                method: 'PUT',
+                
+            })
+            .then(response => response.json())
+            .then(data=>{
+                window.location.reload();
+            })
+            .catch(err=> alert(err))
+        }
+
+    </script>
+
+</body>
+
+</html>
